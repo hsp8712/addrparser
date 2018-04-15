@@ -21,8 +21,7 @@ public class RegionConverter {
         builder.name(regionDTO.getName());
 
         // level
-        String levelStr = regionDTO.getLevel();
-        builder.level(RegionLevel.valueOf(levelStr.toUpperCase()));
+        builder.level(regionDTO.getLevel());
 
         // center
         String[] center = regionDTO.getCenter().split(",");

@@ -1,8 +1,9 @@
-CREATE TABLE earth4j_region (
-  code INT PRIMARY KEY,
-  parent_code INT NOT NULL,
-  name VARCHAR(100) NOT NULL,
-  level TINYINT NOT NULL,
-  center VARCHAR(30),
-  polyline TEXT NOT NULL
-)
+CREATE TABLE `region_data` (
+  `code` int(11) NOT NULL,
+  `parent_code` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `level` tinyint(4) NOT NULL,
+  `center` varchar(30) DEFAULT NULL,
+  `polyline` text NOT NULL,
+  PRIMARY KEY (`code`)
+);

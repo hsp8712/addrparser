@@ -7,29 +7,16 @@ package tech.spiro.addrparser.common;
  */
 public enum RegionLevel {
 
-    COUNTRY(0),
-    PROVINCE(1),
-    CITY(2),
-    DISTRICT(3),
-    STREET(4);
+    COUNTRY,
+    PROVINCE,
+    CITY,
+    DISTRICT,
+    STREET;
 
-    private int value;
-
-    RegionLevel(int value) {
-        this.value = value;
-    }
-
-    public static RegionLevel getByValue(int value) {
-        RegionLevel[] values = RegionLevel.values();
-        for (RegionLevel regionLevel : values) {
-            if (regionLevel.value == value) {
-                return regionLevel;
-            }
+    public static RegionLevel valueOf(int ordinal) {
+        if (ordinal < 0 || ordinal >= values().length) {
+            throw new IndexOutOfBoundsException("Invalid ordinal");
         }
-        return null;
-    }
-
-    public int getValue() {
-        return value;
+        return values()[ordinal];
     }
 }

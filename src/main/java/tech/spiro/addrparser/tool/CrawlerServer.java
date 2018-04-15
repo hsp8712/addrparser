@@ -1,6 +1,10 @@
-package tech.spiro.addrparser.crawler;
+package tech.spiro.addrparser.tool;
 
 import org.apache.commons.cli.*;
+import tech.spiro.addrparser.crawler.GetDistrictsException;
+import tech.spiro.addrparser.crawler.RegionDataCrawler;
+import tech.spiro.addrparser.io.RegionDataOutput;
+import tech.spiro.addrparser.io.file.JSONFileRegionDataOutput;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -37,8 +41,14 @@ public class CrawlerServer {
             }
 
             String out = cmd.getOptionValue('o');
+            int _code = 0;
+            try {
+                _code = Integer.valueOf(code);
+            } catch (NumberFormatException e) {
+                throw new ParseException("code must be numeric.");
+            }
 
-            execute(level, code, out);
+            execute(level, _code, out);
 
         } catch (ParseException e) {
             System.out.println(e.getMessage());
@@ -47,9 +57,9 @@ public class CrawlerServer {
         }
     }
 
-    private static void execute(String level, String code, String out) throws IOException, GetDistrictsException {
-        try (RegionOutput regionOutput = new JsonFileRegionOutput(out)) {
-            LocationInfoCrawler infoLoader = new LocationInfoCrawler(regionOutput);
+    private static void execute(String level, int code, String out) throws IOException, GetDistrictsException {
+        try (RegionDataOutput regionOutput = new JSONFileRegionDataOutput(out)) {
+            RegionDataCrawler infoLoader = new RegionDataCrawler(regionOutput);
 
             if ("0".equals(level)) {
                 infoLoader.loadCountry();

@@ -3,7 +3,10 @@ package tech.spiro.addrparser.crawler;
 import tech.spiro.addrparser.common.RegionDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tech.spiro.addrparser.common.RegionLevel;
+import tech.spiro.addrparser.io.RegionDataOutput;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -13,29 +16,30 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @Description:
  * @Date: 8/2/2017
  */
-public class LocationInfoCrawler {
+public class RegionDataCrawler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(LocationInfoCrawler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RegionDataCrawler.class);
 
-    public static final String COUNTRY_CODE = "100000";
+    public static final int COUNTRY_CODE = 100000;
 //    public static final String AMAP_KEY = "444f3432eda1209dfe4cb8edfd0211f9";
     public static final String AMAP_KEY = "b504cbfb3664f21235dd413fc73b44c5";
 
     private AtomicInteger invokerCount = new AtomicInteger(0);
 
-    private RegionOutput regionOutput;
+    private RegionDataOutput regionOutput;
 
-    public LocationInfoCrawler() {
+    public RegionDataCrawler() {
     }
 
-    public LocationInfoCrawler(RegionOutput regionOutput) {
+    public RegionDataCrawler(RegionDataOutput regionOutput) throws IOException {
         this.regionOutput = regionOutput;
+        this.regionOutput.init();
     }
 
-    private List<RegionDTO> getSubRegionDTOs(String code) throws GetDistrictsException {
+    private List<RegionDTO> getSubRegionDTOs(int code) throws GetDistrictsException {
 
         RestClient restClient = new RestClient();
-        restClient.setKeywords(code);
+        restClient.setKeywords(Integer.toString(code));
         restClient.setKey(AMAP_KEY);
         restClient.setExtensions("base");
         restClient.setSubdistrict("1");
@@ -64,11 +68,17 @@ public class LocationInfoCrawler {
         } else {
             for (District district : subDistricts) {
                 RegionDTO regionDTO = new RegionDTO();
-                regionDTO.setCode(district.getAdcode());
-                regionDTO.setLevel(district.getLevel());
-                regionDTO.setCenter(district.getCenter());
-                regionDTO.setParentCode(code);
-                regionDTO.setName(district.getName());
+
+                try {
+                    regionDTO.setCode(Integer.valueOf(district.getAdcode()));
+                    regionDTO.setLevel(RegionLevel.valueOf(district.getLevel().toUpperCase()));
+                    regionDTO.setCenter(district.getCenter());
+                    regionDTO.setParentCode(code);
+                    regionDTO.setName(district.getName());
+                } catch (Exception e) {
+                    throw new GetDistrictsException("<district> cannot convert to RegionDTO, maybe district invalid, district:"
+                            + district.toString(), e);
+                }
                 subRegionDTOs.add(regionDTO);
             }
         }
@@ -78,7 +88,7 @@ public class LocationInfoCrawler {
             RestClient subRestClient = new RestClient();
             subRestClient.setExtensions("all");
             subRestClient.setKey(AMAP_KEY);
-            subRestClient.setKeywords(subRegionDTO.getCode());
+            subRestClient.setKeywords(Integer.toString(subRegionDTO.getCode()));
             subRestClient.setSubdistrict("0");
 
             DataResponse subDataResp = subRestClient.getDistrictResponse();
@@ -100,49 +110,51 @@ public class LocationInfoCrawler {
         return subRegionDTOs;
     }
 
+    private void regionBatchOutput(List<RegionDTO> regionDTOs) throws GetDistrictsException {
+        try {
+            for (RegionDTO regionDTO : regionDTOs) {
+                this.regionOutput.write(regionDTO);
+            }
+        } catch (IOException e) {
+            throw new GetDistrictsException(e.getMessage(), e);
+        }
+    }
+
     public void loadCountry() throws GetDistrictsException {
-        if (regionOutput == null || !regionOutput.isAvailable()) {
-            LOG.warn("Have no <regionOutput> or not available, do not execute.");
-            return;
+        if (regionOutput == null) {
+            throw new GetDistrictsException("<regionOutput> is null.");
         }
         // Get provinces
         List<RegionDTO> provRegionDTOs = getSubRegionDTOs(COUNTRY_CODE);
-        regionOutput.output(provRegionDTOs);
+        regionBatchOutput(provRegionDTOs);
 
         for (RegionDTO provRegionDTO : provRegionDTOs) {
             loadProv(provRegionDTO.getCode());
         }
     }
 
-    public void loadProv(String provCode) throws GetDistrictsException {
-        if (regionOutput == null || !regionOutput.isAvailable()) {
-            LOG.warn("Have no <regionOutput> or not available, do not execute.");
-            return;
+    public void loadProv(int provCode) throws GetDistrictsException {
+        if (regionOutput == null) {
+            throw new GetDistrictsException("<regionOutput> is null.");
         }
 
         // Get cities
         List<RegionDTO> cityRegionDTOs = getSubRegionDTOs(provCode);
-        regionOutput.output(cityRegionDTOs);
+        regionBatchOutput(cityRegionDTOs);
 
         for (RegionDTO cityRegionDTO : cityRegionDTOs) {
             loadCity(cityRegionDTO.getCode());
         }
     }
 
-    public void loadCity(String cityCode) throws GetDistrictsException {
-        if (regionOutput == null || !regionOutput.isAvailable()) {
-            LOG.warn("Have no <regionOutput> or not available, do not execute.");
-            return;
+    public void loadCity(int cityCode) throws GetDistrictsException {
+        if (regionOutput == null) {
+            throw new GetDistrictsException("<regionOutput> is null.");
         }
 
         // Get districts
-
         List<RegionDTO> districtRegionDTOs = getSubRegionDTOs(cityCode);
-        regionOutput.output(districtRegionDTOs);
-    }
-
-    public RegionOutput getRegionOutput() {
-        return regionOutput;
+        regionBatchOutput(districtRegionDTOs);
     }
 
 }

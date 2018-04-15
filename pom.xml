@@ -55,19 +55,10 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.41</version>
-			<scope>runtime</scope>
 		</dependency>
     </dependencies>
 
     <build>
-        <testResources>
-            <testResource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>earth4j.dat</include>
-                </includes>
-            </testResource>
-        </testResources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
