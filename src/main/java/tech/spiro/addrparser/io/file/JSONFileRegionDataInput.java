@@ -13,9 +13,9 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * @Author: Shaoping Huang
- * @Description:
- * @Date: 4/15/2018
+ * Input region data from json file.
+ * @author Spiro Huang
+ * @since 1.0
  */
 public class JSONFileRegionDataInput implements RegionDataInput {
 

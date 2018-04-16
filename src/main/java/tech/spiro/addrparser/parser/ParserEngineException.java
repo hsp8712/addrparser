@@ -1,5 +1,10 @@
 package tech.spiro.addrparser.parser;
 
+/**
+ * Exception when {@link LocationParserEngine} parsing.
+ * @author Spiro Huang
+ * @since 1.0
+ */
 public class ParserEngineException extends Exception {
 
     /**

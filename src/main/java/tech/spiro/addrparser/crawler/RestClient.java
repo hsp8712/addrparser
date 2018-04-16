@@ -15,9 +15,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
- * @Author: Shaoping Huang
- * @Description:
- * @Date: 7/30/2017
+ * Send http restful request and get region data response.
+ * @author Spiro Huang
+ * @since 1.0
  */
 public class RestClient {
 
@@ -36,7 +36,7 @@ public class RestClient {
         this.httpClient = HttpClients.createDefault();
     }
 
-    public DataResponse getDistrictResponse() throws GetDistrictsException {
+    public DataResp getDistrictResponse() throws GetRegionException {
         URI uri = null;
         try {
              uri = new URIBuilder()
@@ -49,7 +49,7 @@ public class RestClient {
                     .setParameter("extensions", this.getExtensions())
                     .build();
         } catch (URISyntaxException e) {
-            throw new GetDistrictsException("uri syntax error.");
+            throw new GetRegionException("uri syntax error.");
         }
 
         HttpGet httpGet = new HttpGet(uri);
@@ -58,14 +58,14 @@ public class RestClient {
         try {
             response = this.httpClient.execute(httpGet);
             if (response.getStatusLine().getStatusCode() != 200) {
-                throw new GetDistrictsException("Execute get request failed, http-code="
+                throw new GetRegionException("Execute get request failed, http-code="
                         + response.getStatusLine().getStatusCode());
             }
 
             String responseContent = EntityUtils.toString(response.getEntity());
-            return JSON.parseObject(responseContent, DataResponse.class);
+            return JSON.parseObject(responseContent, DataResp.class);
         } catch (IOException e) {
-            throw new GetDistrictsException("Execute get request exception.");
+            throw new GetRegionException("Execute get request exception.");
         } finally {
             if (response != null) {
                 try {

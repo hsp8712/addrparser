@@ -2,7 +2,7 @@ package tech.spiro.addrparser.tool;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import org.apache.commons.cli.*;
-import tech.spiro.addrparser.crawler.GetDistrictsException;
+import tech.spiro.addrparser.crawler.GetRegionException;
 import tech.spiro.addrparser.io.IOPipeline;
 import tech.spiro.addrparser.io.RegionDataInput;
 import tech.spiro.addrparser.io.RegionDataOutput;
@@ -12,9 +12,9 @@ import tech.spiro.addrparser.io.rdbms.RdbmsRegionDataOutput;
 import java.io.IOException;
 
 /**
- * @Author: Shaoping Huang
- * @Description:
- * @Date: 4/15/2018
+ * A command-line tool to stream region data from json file to mysql.
+ * @author Spiro Huang
+ * @since 1.0
  */
 public class JSONFile2MySQL {
     private static Options options = new Options();
@@ -32,7 +32,7 @@ public class JSONFile2MySQL {
         formatter.printHelp("JSONFile2MySQL", options );
     }
 
-    public static void main(String[] args) throws IOException, GetDistrictsException {
+    public static void main(String[] args) throws IOException, GetRegionException {
 
         CommandLineParser parser = new DefaultParser();
         try {

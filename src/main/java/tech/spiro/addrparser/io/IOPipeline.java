@@ -5,9 +5,9 @@ import tech.spiro.addrparser.common.RegionDTO;
 import java.io.IOException;
 
 /**
- * @Author: Shaoping Huang
- * @Description:
- * @Date: 4/15/2018
+ * Connect input to output.
+ * @author Spiro Huang
+ * @since 1.0
  */
 public class IOPipeline {
 

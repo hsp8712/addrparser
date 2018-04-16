@@ -7,9 +7,8 @@ import java.io.IOException;
 
 /**
  * Input region data from external storage, just like local file or rdbms.
- * @Author: Shaoping Huang
- * @Description:
- * @Date: 4/12/2018
+ * @author Spiro Huang
+ * @since 1.0
  */
 public interface RegionDataInput extends Closeable {
     void init() throws IOException;
@@ -17,7 +16,7 @@ public interface RegionDataInput extends Closeable {
     /**
      * Read region data
      * @return if null, implicit to the end.
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs.
      */
     RegionDTO read() throws IOException;
 }

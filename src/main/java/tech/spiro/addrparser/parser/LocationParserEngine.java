@@ -6,6 +6,11 @@ import java.util.*;
 import tech.spiro.addrparser.common.*;
 import tech.spiro.addrparser.io.RegionDataInput;
 
+/**
+ * The engine to parse {@link Point} or longitude/latitude pair to {@link Location}.
+ * @author Spiro Huang
+ * @since 1.0
+ */
 public class LocationParserEngine {
 
     private RegionDataInput regionDataInput;
@@ -58,7 +63,6 @@ public class LocationParserEngine {
 
     /**
      * SortThrough region info.
-     * @param regionDTO
      */
     private void sortThrough(RegionDTO regionDTO) {
         RegionInfo regionInfo = RegionConverter.convert(regionDTO);
@@ -93,8 +97,8 @@ public class LocationParserEngine {
 
     /**
      * Get location info by {@link Point}
-     * @param point
-     * @return
+     * @param point {@link Point} to parse.
+     * @return location info
      */
     public Location parse(Point point) {
 
@@ -154,9 +158,9 @@ public class LocationParserEngine {
 
     /**
      * Get location info by longitude/latitude
-     * @param lon
-     * @param lat
-     * @return
+     * @param lon  longitude
+     * @param lat  latitude
+     * @return location info
      */
     public Location parse(double lon, double lat) {
         Point point = new Point(lon, lat);
@@ -165,27 +169,27 @@ public class LocationParserEngine {
 
 
     /**
-     * TODO
-     * @param code
-     * @return
+     * Get region info by {@code region.code}
+     * @param code  region code
+     * @return region info
      */
     public RegionInfo getRegionInfo(int code) {
         throw new NotImplementedException();
     }
 
     /**
-     * TODO
-     * @param name
-     * @return
+     * Get region info by {@code region.name}
+     * @param name  region name
+     * @return region info
      */
     public RegionInfo getRegionInfo(String name) {
         throw new NotImplementedException();
     }
 
     /**
-     * TODO
-     * @param code
-     * @return
+     * Get sub region info list by {@code region.code}
+     * @param code  region code
+     * @return region info
      */
     public List<RegionInfo> getSubRegionInfoList(int code) {
         throw new NotImplementedException();

@@ -12,9 +12,14 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * @Author: Shaoping Huang
- * @Description:
- * @Date: 8/2/2017
+ * Region data crawler, use by invoke methods:
+ * <ul>
+ *     <li>{@code loadCountry()}</li>
+ *     <li>{@code loadProv(int provCode)}</li>
+ *     <li>{@code loadCity(int cityCode)}</li>
+ * </ul>
+ * @author Spiro Huang
+ * @since 1.0
  */
 public class RegionDataCrawler {
 
@@ -36,7 +41,7 @@ public class RegionDataCrawler {
         this.regionOutput.init();
     }
 
-    private List<RegionDTO> getSubRegionDTOs(int code) throws GetDistrictsException {
+    private List<RegionDTO> getSubRegionDTOs(int code) throws GetRegionException {
 
         RestClient restClient = new RestClient();
         restClient.setKeywords(Integer.toString(code));
@@ -44,40 +49,40 @@ public class RegionDataCrawler {
         restClient.setExtensions("base");
         restClient.setSubdistrict("1");
 
-        DataResponse dataResponse = restClient.getDistrictResponse();
+        DataResp dataResponse = restClient.getDistrictResponse();
         LOG.debug("Invoker.count=" + invokerCount.incrementAndGet());
 
         if (!dataResponse.isSuccess()) {
-            throw new GetDistrictsException("Get failed, infocode="
+            throw new GetRegionException("Get failed, infocode="
                     + dataResponse.getInfocode() + ", info=" + dataResponse.getInfo());
         }
 
-        List<District> districts = dataResponse.getDistricts();
-        if (districts.isEmpty()) {
-            LOG.warn("Have no districts return, keyword code={}", code);
+        List<RegionResp> regionResps = dataResponse.getRegionResps();
+        if (regionResps.isEmpty()) {
+            LOG.warn("Have no regionResps return, keyword code={}", code);
             return null;
         }
 
-        District curDistrict = districts.get(0);
-        List<District> subDistricts = curDistrict.getDistricts();
+        RegionResp curRegionResp = regionResps.get(0);
+        List<RegionResp> subRegionResps = curRegionResp.getRegionResps();
 
         List<RegionDTO> subRegionDTOs = new ArrayList<>();
 
-        if (subDistricts == null || subDistricts.isEmpty()) {
-            LOG.warn("Have no sub districts, {}", curDistrict);
+        if (subRegionResps == null || subRegionResps.isEmpty()) {
+            LOG.warn("Have no sub regionResps, {}", curRegionResp);
         } else {
-            for (District district : subDistricts) {
+            for (RegionResp regionResp : subRegionResps) {
                 RegionDTO regionDTO = new RegionDTO();
 
                 try {
-                    regionDTO.setCode(Integer.valueOf(district.getAdcode()));
-                    regionDTO.setLevel(RegionLevel.valueOf(district.getLevel().toUpperCase()));
-                    regionDTO.setCenter(district.getCenter());
+                    regionDTO.setCode(Integer.valueOf(regionResp.getAdcode()));
+                    regionDTO.setLevel(RegionLevel.valueOf(regionResp.getLevel().toUpperCase()));
+                    regionDTO.setCenter(regionResp.getCenter());
                     regionDTO.setParentCode(code);
-                    regionDTO.setName(district.getName());
+                    regionDTO.setName(regionResp.getName());
                 } catch (Exception e) {
-                    throw new GetDistrictsException("<district> cannot convert to RegionDTO, maybe district invalid, district:"
-                            + district.toString(), e);
+                    throw new GetRegionException("<regionResp> cannot convert to RegionDTO, maybe regionResp invalid, regionResp:"
+                            + regionResp.toString(), e);
                 }
                 subRegionDTOs.add(regionDTO);
             }
@@ -91,38 +96,38 @@ public class RegionDataCrawler {
             subRestClient.setKeywords(Integer.toString(subRegionDTO.getCode()));
             subRestClient.setSubdistrict("0");
 
-            DataResponse subDataResp = subRestClient.getDistrictResponse();
+            DataResp subDataResp = subRestClient.getDistrictResponse();
             LOG.debug("Invoker.count=" + invokerCount.incrementAndGet());
 
             if (!subDataResp.isSuccess()) {
-                throw new GetDistrictsException("Get sub district failed");
+                throw new GetRegionException("Get sub district failed");
             }
 
-            List<District> _subDistricts = subDataResp.getDistricts();
-            if (_subDistricts.isEmpty()) {
-                throw new GetDistrictsException("Get sub district failed");
+            List<RegionResp> _subRegionResps = subDataResp.getRegionResps();
+            if (_subRegionResps.isEmpty()) {
+                throw new GetRegionException("Get sub district failed");
             }
 
-            District _subDistrict = _subDistricts.get(0);
-            subRegionDTO.setPolyline(_subDistrict.getPolyline());
+            RegionResp _subRegionResp = _subRegionResps.get(0);
+            subRegionDTO.setPolyline(_subRegionResp.getPolyline());
         }
 
         return subRegionDTOs;
     }
 
-    private void regionBatchOutput(List<RegionDTO> regionDTOs) throws GetDistrictsException {
+    private void regionBatchOutput(List<RegionDTO> regionDTOs) throws GetRegionException {
         try {
             for (RegionDTO regionDTO : regionDTOs) {
                 this.regionOutput.write(regionDTO);
             }
         } catch (IOException e) {
-            throw new GetDistrictsException(e.getMessage(), e);
+            throw new GetRegionException(e.getMessage(), e);
         }
     }
 
-    public void loadCountry() throws GetDistrictsException {
+    public void loadCountry() throws GetRegionException {
         if (regionOutput == null) {
-            throw new GetDistrictsException("<regionOutput> is null.");
+            throw new GetRegionException("<regionOutput> is null.");
         }
         // Get provinces
         List<RegionDTO> provRegionDTOs = getSubRegionDTOs(COUNTRY_CODE);
@@ -133,9 +138,9 @@ public class RegionDataCrawler {
         }
     }
 
-    public void loadProv(int provCode) throws GetDistrictsException {
+    public void loadProv(int provCode) throws GetRegionException {
         if (regionOutput == null) {
-            throw new GetDistrictsException("<regionOutput> is null.");
+            throw new GetRegionException("<regionOutput> is null.");
         }
 
         // Get cities
@@ -147,9 +152,9 @@ public class RegionDataCrawler {
         }
     }
 
-    public void loadCity(int cityCode) throws GetDistrictsException {
+    public void loadCity(int cityCode) throws GetRegionException {
         if (regionOutput == null) {
-            throw new GetDistrictsException("<regionOutput> is null.");
+            throw new GetRegionException("<regionOutput> is null.");
         }
 
         // Get districts

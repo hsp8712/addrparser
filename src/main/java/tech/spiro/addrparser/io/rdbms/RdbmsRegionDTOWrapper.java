@@ -8,9 +8,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * @Author: Shaoping Huang
- * @Description:
- * @Date: 4/15/2018
+ * Rdbms wrapper of {@link RegionDTO}, add support of read from and write to rdbms.
+ * @author Spiro Huang
+ * @since 1.0
  */
 public class RdbmsRegionDTOWrapper extends RegionDTO {
 

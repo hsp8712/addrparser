@@ -1,9 +1,9 @@
 package tech.spiro.addrparser.common;
 
 /**
- * @Author: Shaoping Huang
- * @Description:
- * @Date: 7/30/2017
+ * Region data object for I/O.
+ * @author Spiro Huang
+ * @since 1.0
  */
 public class RegionDTO {
     private int parentCode;

@@ -3,9 +3,9 @@ package tech.spiro.addrparser.common;
 import java.util.List;
 
 /**
- * @Author: Shaoping Huang
- * @Description:
- * @Date: 4/10/2018
+ * Interface to judge whether a point in polygons
+ * @author Spiro Huang
+ * @since 1.0
  */
 public interface ContainPointJudge {
 

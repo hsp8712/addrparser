@@ -2,6 +2,11 @@ package tech.spiro.addrparser.parser;
 
 import tech.spiro.addrparser.common.RegionInfo;
 
+/**
+ * Location information as result of parsing.
+ * @author Spiro Huang
+ * @since 1.0
+ */
 public class Location {
     private final RegionInfo prov;
     private final RegionInfo city;

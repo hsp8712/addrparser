@@ -1,9 +1,8 @@
 package tech.spiro.addrparser.common;
 
 /**
- * @Author: Shaoping Huang
- * @Description:
- * @Date: 7/29/2017
+ * @author Spiro Huang
+ * @since 1.0
  */
 public enum RegionLevel {
 

@@ -5,7 +5,12 @@ import tech.spiro.addrparser.common.Point;
 import java.awt.Polygon;
 import java.awt.geom.Line2D;
 
-public class AreaTools
+/**
+ * Tools related with map calculating.
+ * @author Spiro Huang
+ * @since 1.0
+ */
+public class MapTools
 {
 	private static double EARTH_RADIUS = 6378137;
 
@@ -17,9 +22,9 @@ public class AreaTools
 
 	/**
 	 * Calculate point to point distance (meter)
-	 * @param p1
-	 * @param p2
-	 * @return
+	 * @param p1   one of 2 points
+	 * @param p2   one of 2 points
+	 * @return  Distance of 2 points.
 	 */
 	public static double getPoint2PointDistance(Point p1, Point p2)
 	{
@@ -38,10 +43,10 @@ public class AreaTools
 
 	/**
 	 * Calculate point to line distance (meter)
-	 * @param p
-	 * @param lineStartPoint
-	 * @param lineEndPoint
-	 * @return
+	 * @param p                 point
+	 * @param lineStartPoint    line start point
+	 * @param lineEndPoint      line end point
+	 * @return  distance of point to line.
 	 */
 	public static double getPoint2LineDistance(Point p, Point lineStartPoint, Point lineEndPoint)
 	{
@@ -55,7 +60,7 @@ public class AreaTools
 	 * @param p            The point to determine
 	 * @param centerPoint  Circle center point
 	 * @param radius       Circle radius
-	 * @return
+	 * @return  true, point in circle, otherwise false.
 	 */
 	public static boolean inCircleArea(Point p, Point centerPoint, double radius)
 	{
@@ -75,7 +80,7 @@ public class AreaTools
 	 * @param p                The point to determine
 	 * @param upLeftPoint      Rectangle up left point
 	 * @param downRightPoint   Rectangle down right point
-	 * @return
+	 * @return  true, point in rectangle, otherwise false.
 	 */
 	public static boolean inRectangleArea(Point p, Point upLeftPoint, Point downRightPoint)
 	{
@@ -94,7 +99,7 @@ public class AreaTools
 	 * To determine whether a point in a polygon
 	 * @param p        The point to determine
 	 * @param area     Polygon 
-	 * @return
+	 * @return  true, point in polygon, otherwise false.
 	 */
 	public static boolean inPolygonArea(Point p, Point area[])
 	{
@@ -111,7 +116,7 @@ public class AreaTools
 	 * @param p            The point to determine
 	 * @param line         Track points
 	 * @param distance     Yawing distance
-	 * @return
+	 * @return true, point yawing, otherwise false.
 	 */
 	public static boolean yawing(Point p, Point line[], double distance)
 	{

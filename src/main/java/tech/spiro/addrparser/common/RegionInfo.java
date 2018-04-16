@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @Author: Shaoping Huang
- * @Description:
- * @Date: 8/8/2017
+ * Region data object for calculating.
+ * @author Spiro Huang
+ * @since 1.0
  */
 public class RegionInfo {
 

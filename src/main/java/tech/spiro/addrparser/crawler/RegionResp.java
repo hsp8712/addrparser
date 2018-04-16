@@ -3,17 +3,17 @@ package tech.spiro.addrparser.crawler;
 import java.util.List;
 
 /**
- * @Author: Shaoping Huang
- * @Description:
- * @Date: 7/31/2017
+ *
+ * @author Spiro Huang
+ * @since 1.0
  */
-public class District {
+public class RegionResp {
     private String adcode;
     private String name;
     private String center;
     private String level;
     private String polyline;
-    private List<District> districts;
+    private List<RegionResp> regionResps;
 
     public String getAdcode() {
         return adcode;
@@ -55,23 +55,23 @@ public class District {
         this.polyline = polyline;
     }
 
-    public List<District> getDistricts() {
-        return districts;
+    public List<RegionResp> getRegionResps() {
+        return regionResps;
     }
 
-    public void setDistricts(List<District> districts) {
-        this.districts = districts;
+    public void setRegionResps(List<RegionResp> regionResps) {
+        this.regionResps = regionResps;
     }
 
     @Override
     public String toString() {
-        return "District{" +
+        return "RegionResp{" +
                 "adcode='" + adcode + '\'' +
                 ", name='" + name + '\'' +
                 ", center='" + center + '\'' +
                 ", level='" + level + '\'' +
                 ", polyline='" + polyline + '\'' +
-                ", districts=" + districts +
+                ", regionResps=" + regionResps +
                 '}';
     }
 }

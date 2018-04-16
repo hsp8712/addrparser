@@ -1,7 +1,7 @@
 package tech.spiro.addrparser.tool;
 
 import org.apache.commons.cli.*;
-import tech.spiro.addrparser.crawler.GetDistrictsException;
+import tech.spiro.addrparser.crawler.GetRegionException;
 import tech.spiro.addrparser.crawler.RegionDataCrawler;
 import tech.spiro.addrparser.io.RegionDataOutput;
 import tech.spiro.addrparser.io.file.JSONFileRegionDataOutput;
@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.util.Arrays;
 
 /**
- * @Author: Shaoping Huang
- * @Description:
- * @Date: 4/3/2018
+ * A command-line tool to crawl region data.
+ * @author Spiro Huang
+ * @since 1.0
  */
 public class CrawlerServer {
 
@@ -28,7 +28,7 @@ public class CrawlerServer {
         formatter.printHelp("CrawlerServer", options );
     }
 
-    public static void main(String[] args) throws IOException, GetDistrictsException {
+    public static void main(String[] args) throws IOException, GetRegionException {
 
         CommandLineParser parser = new DefaultParser();
         try {
@@ -57,7 +57,7 @@ public class CrawlerServer {
         }
     }
 
-    private static void execute(String level, int code, String out) throws IOException, GetDistrictsException {
+    private static void execute(String level, int code, String out) throws IOException, GetRegionException {
         try (RegionDataOutput regionOutput = new JSONFileRegionDataOutput(out)) {
             RegionDataCrawler infoLoader = new RegionDataCrawler(regionOutput);
 

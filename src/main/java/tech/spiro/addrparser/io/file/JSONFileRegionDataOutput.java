@@ -13,9 +13,9 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * @Author: Shaoping Huang
- * @Description:
- * @Date: 4/14/2018
+ * Output region data to json file.
+ * @author Spiro Huang
+ * @since 1.0
  */
 public class JSONFileRegionDataOutput implements RegionDataOutput {
 

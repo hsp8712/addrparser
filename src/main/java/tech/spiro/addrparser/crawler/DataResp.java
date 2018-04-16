@@ -3,17 +3,17 @@ package tech.spiro.addrparser.crawler;
 import java.util.List;
 
 /**
- * @Author: Shaoping Huang
- * @Description:
- * @Date: 7/31/2017
+ * Response data object for rest request.
+ * @author Spiro Huang
+ * @since 1.0
  */
-public class DataResponse {
+public class DataResp {
 
     private String status;
     private String info;
     private String infocode;
     private String count;
-    private List<District> districts;
+    private List<RegionResp> regionResps;
 
     public String getStatus() {
         return status;
@@ -47,22 +47,22 @@ public class DataResponse {
         this.count = count;
     }
 
-    public List<District> getDistricts() {
-        return districts;
+    public List<RegionResp> getRegionResps() {
+        return regionResps;
     }
 
-    public void setDistricts(List<District> districts) {
-        this.districts = districts;
+    public void setRegionResps(List<RegionResp> regionResps) {
+        this.regionResps = regionResps;
     }
 
     @Override
     public String toString() {
-        return "DataResponse{" +
+        return "DataResp{" +
                 "status='" + status + '\'' +
                 ", info='" + info + '\'' +
                 ", infocode='" + infocode + '\'' +
                 ", count='" + count + '\'' +
-                ", districts=" + districts +
+                ", regionResps=" + regionResps +
                 '}';
     }
 

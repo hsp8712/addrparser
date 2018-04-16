@@ -1,5 +1,10 @@
 package tech.spiro.addrparser.common;
 
+/**
+ * Point with longitude/latitude pair.
+ * @author Spiro Huang
+ * @since 1.0
+ */
 public class Point
 {
 	private final double lon;

@@ -8,9 +8,8 @@ import java.util.Map;
 
 /**
  * Region Data Output Report
- * @Author: Shaoping Huang
- * @Description:
- * @Date: 4/14/2018
+ * @author Spiro Huang
+ * @since 1.0
  */
 public class RegionDataReport {
 
