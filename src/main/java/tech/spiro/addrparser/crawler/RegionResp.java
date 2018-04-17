@@ -13,7 +13,7 @@ public class RegionResp {
     private String center;
     private String level;
     private String polyline;
-    private List<RegionResp> regionResps;
+    private List<RegionResp> districts;
 
     public String getAdcode() {
         return adcode;
@@ -55,12 +55,12 @@ public class RegionResp {
         this.polyline = polyline;
     }
 
-    public List<RegionResp> getRegionResps() {
-        return regionResps;
+    public List<RegionResp> getDistricts() {
+        return districts;
     }
 
-    public void setRegionResps(List<RegionResp> regionResps) {
-        this.regionResps = regionResps;
+    public void setDistricts(List<RegionResp> districts) {
+        this.districts = districts;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class RegionResp {
                 ", center='" + center + '\'' +
                 ", level='" + level + '\'' +
                 ", polyline='" + polyline + '\'' +
-                ", regionResps=" + regionResps +
+                ", districts=" + districts +
                 '}';
     }
 }

@@ -23,7 +23,6 @@ public class RdbmsRegionDataOutput implements RegionDataOutput {
 
     private static final Logger LOG = LoggerFactory.getLogger(RdbmsRegionDataOutput.class);
 
-    private static final String INSERT_SQL = "INSERT INTO region_data(code, parent_code, name, level, center, polyline) VALUES (?,?,?,?,?,?)";
     private static final int BATCH_SIZE = 100;
 
     private DataSource ds = null;
@@ -32,9 +31,25 @@ public class RdbmsRegionDataOutput implements RegionDataOutput {
     private int batchCount = 0;
     private RegionDataReport report = new RegionDataReport();
     private boolean initialized = false;
+    private final String sql;
 
-    public RdbmsRegionDataOutput(DataSource source) {
-        this.ds = source;
+    public RdbmsRegionDataOutput(DataSource ds, String tableName) {
+        if (ds == null) {
+            throw new IllegalArgumentException("DataSource:<ds> is null.");
+        }
+        if (tableName == null) {
+            throw new IllegalArgumentException("<tableName> is null.");
+        }
+        this.ds = ds;
+        this.sql = RdbmsSQL.insertSQL(tableName);
+    }
+
+    public RdbmsRegionDataOutput(DataSource ds) {
+        if (ds == null) {
+            throw new IllegalArgumentException("DataSource:<ds> is null.");
+        }
+        this.ds = ds;
+        this.sql = RdbmsSQL.defaultInsertSQL();
     }
 
     @Override
@@ -48,6 +63,9 @@ public class RdbmsRegionDataOutput implements RegionDataOutput {
             if (initialized) {
                 return;
             }
+
+            LOG.debug("Initializing...sql: {}", this.sql);
+
             try {
                 this.conn = this.ds.getConnection();
                 this.conn.setAutoCommit(false);
@@ -55,17 +73,19 @@ public class RdbmsRegionDataOutput implements RegionDataOutput {
                 throw new IOException(e.getMessage(), e);
             }
 
+            LOG.debug("Initializing: Get connection completely.");
+
             try {
-                this.stmt = this.conn.prepareStatement(INSERT_SQL);
+                this.stmt = this.conn.prepareStatement(this.sql);
             } catch (SQLException e) {
-                throw new IOException(e.getMessage(), e);
-            } finally {
                 try {
                     this.conn.close();
-                } catch (SQLException e) {
+                } catch (SQLException e1) {
                 }
+                throw new IOException(e.getMessage(), e);
             }
 
+            LOG.debug("Initializing: Get preparedStatement completely.");
             this.initialized = true;
         }
 
@@ -83,8 +103,7 @@ public class RdbmsRegionDataOutput implements RegionDataOutput {
             return;
         }
         if (!(regionDTO instanceof RdbmsRegionDTOWrapper)) {
-            throw new IllegalArgumentException(
-                    "<regionDTO> is not instance of <tech.spiro.addrparser.io.rdbms.RdbmsRegionDTOWrapper>");
+            regionDTO = new RdbmsRegionDTOWrapper(regionDTO);
         }
 
         RdbmsRegionDTOWrapper wrapper = (RdbmsRegionDTOWrapper) regionDTO;
@@ -125,6 +144,7 @@ public class RdbmsRegionDataOutput implements RegionDataOutput {
         try {
             flushBatch();
         } catch (SQLException e) {
+
             throw new IOException(e.getMessage(), e);
         } finally {
             try {

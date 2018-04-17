@@ -14,6 +14,7 @@ import java.util.Map;
 public class RegionDataReport {
 
     private int totalCount = 0;
+
     private Map<RegionLevel, Integer> levelCountMap = new HashMap<>();
     public void record(RegionDTO regionDTO) {
 

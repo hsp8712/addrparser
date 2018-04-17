@@ -13,7 +13,7 @@ public class DataResp {
     private String info;
     private String infocode;
     private String count;
-    private List<RegionResp> regionResps;
+    private List<RegionResp> districts;
 
     public String getStatus() {
         return status;
@@ -47,12 +47,12 @@ public class DataResp {
         this.count = count;
     }
 
-    public List<RegionResp> getRegionResps() {
-        return regionResps;
+    public List<RegionResp> getDistricts() {
+        return districts;
     }
 
-    public void setRegionResps(List<RegionResp> regionResps) {
-        this.regionResps = regionResps;
+    public void setDistricts(List<RegionResp> districts) {
+        this.districts = districts;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class DataResp {
                 ", info='" + info + '\'' +
                 ", infocode='" + infocode + '\'' +
                 ", count='" + count + '\'' +
-                ", regionResps=" + regionResps +
+                ", districts=" + districts +
                 '}';
     }
 

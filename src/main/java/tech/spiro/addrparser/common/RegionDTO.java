@@ -82,7 +82,7 @@ public class RegionDTO {
                 ", name='" + name + '\'' +
                 ", level=" + level +
                 ", center='" + center + '\'' +
-                ", polyline='" + polyline + '\'' +
+                ", polyline='...'" +
                 '}';
     }
 }

@@ -57,14 +57,14 @@ public class RegionDataCrawler {
                     + dataResponse.getInfocode() + ", info=" + dataResponse.getInfo());
         }
 
-        List<RegionResp> regionResps = dataResponse.getRegionResps();
+        List<RegionResp> regionResps = dataResponse.getDistricts();
         if (regionResps.isEmpty()) {
             LOG.warn("Have no regionResps return, keyword code={}", code);
             return null;
         }
 
         RegionResp curRegionResp = regionResps.get(0);
-        List<RegionResp> subRegionResps = curRegionResp.getRegionResps();
+        List<RegionResp> subRegionResps = curRegionResp.getDistricts();
 
         List<RegionDTO> subRegionDTOs = new ArrayList<>();
 
@@ -103,7 +103,7 @@ public class RegionDataCrawler {
                 throw new GetRegionException("Get sub district failed");
             }
 
-            List<RegionResp> _subRegionResps = subDataResp.getRegionResps();
+            List<RegionResp> _subRegionResps = subDataResp.getDistricts();
             if (_subRegionResps.isEmpty()) {
                 throw new GetRegionException("Get sub district failed");
             }

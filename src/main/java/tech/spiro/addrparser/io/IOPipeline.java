@@ -1,5 +1,7 @@
 package tech.spiro.addrparser.io;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tech.spiro.addrparser.common.RegionDTO;
 
 import java.io.IOException;
@@ -10,6 +12,8 @@ import java.io.IOException;
  * @since 1.0
  */
 public class IOPipeline {
+
+    private static final Logger LOG = LoggerFactory.getLogger(IOPipeline.class);
 
     private final RegionDataInput input;
     private final RegionDataOutput output;
@@ -32,8 +36,17 @@ public class IOPipeline {
                 output.write(regionDTO);
             }
         } finally {
-            input.close();
-            output.close();
+            try {
+                input.close();
+            } catch (Exception e) {
+                LOG.error(e.getMessage(), e);
+            }
+
+            try {
+                output.close();
+            } catch (Exception e) {
+                LOG.error(e.getMessage(), e);
+            }
         }
     }
 }

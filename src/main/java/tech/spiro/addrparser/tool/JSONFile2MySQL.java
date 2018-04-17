@@ -8,8 +8,12 @@ import tech.spiro.addrparser.io.RegionDataInput;
 import tech.spiro.addrparser.io.RegionDataOutput;
 import tech.spiro.addrparser.io.file.JSONFileRegionDataInput;
 import tech.spiro.addrparser.io.rdbms.RdbmsRegionDataOutput;
+import tech.spiro.addrparser.io.rdbms.RdbmsSQL;
 
+import javax.sql.DataSource;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * A command-line tool to stream region data from json file to mysql.
@@ -19,12 +23,16 @@ import java.io.IOException;
 public class JSONFile2MySQL {
     private static Options options = new Options();
     static {
-        options.addRequiredOption("f", "file", true, "Json region data file path");
+        options.addOption("f", "file", true, "Json region data file path");
+
         options.addRequiredOption("h", "host", true, "MySQL host");
-        options.addRequiredOption("p", "port", false, "MySQL port, default 3306");
+        options.addOption("p", "port", true, "MySQL port, default 3306");
         options.addRequiredOption("d", "db", true, "MySQL database");
         options.addRequiredOption("u", "user", true, "MySQL user");
         options.addRequiredOption("a", "password", true, "MySQL password");
+
+        options.addOption("t", "table-name", true, "Default: '" + RdbmsSQL.DEFAULT_TABLE_NAME + "', Region data table name");
+        options.addOption("i", "init", false, "Init table schema");
     }
 
     private static void printHelp() {
@@ -37,38 +45,67 @@ public class JSONFile2MySQL {
         CommandLineParser parser = new DefaultParser();
         try {
             CommandLine cmd = parser.parse(options, args);
-            String file = cmd.getOptionValue('f');
-            String mysqlHost = cmd.getOptionValue('h');
-            int mysqlPort = 3306;
 
-            if (cmd.hasOption('p')) {
+            DataSource dataSource = buildDataSource(cmd);
+
+            String tableName = cmd.getOptionValue('t');
+            if (cmd.hasOption('i')) {
                 try {
-                    mysqlPort = Integer.valueOf(cmd.getOptionValue('p'));
-                } catch (NumberFormatException e) {
-                    throw new ParseException(e.getMessage());
+                    MySQLTableInit.init(dataSource, tableName);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    System.exit(-1);
                 }
             }
-            String mysqlDB = cmd.getOptionValue('d');
-            String mysqlUser = cmd.getOptionValue('u');
-            String mysqlPassword = cmd.getOptionValue('a');
 
-            RegionDataInput dataInput = new JSONFileRegionDataInput(file);
+            String file = cmd.getOptionValue('f');
+            if (file != null) {
+                RegionDataInput dataInput = new JSONFileRegionDataInput(file);
+                RegionDataOutput dataOutput = null;
+                if (tableName == null) {
+                    dataOutput = new RdbmsRegionDataOutput(dataSource);
+                } else {
+                    dataOutput = new RdbmsRegionDataOutput(dataSource, tableName);
+                }
 
-            MysqlDataSource dataSource = new MysqlDataSource();
-            dataSource.setServerName(mysqlHost);
-            dataSource.setPort(mysqlPort);
-            dataSource.setDatabaseName(mysqlDB);
-            dataSource.setUser(mysqlUser);
-            dataSource.setPassword(mysqlPassword);
-            RegionDataOutput dataOutput = new RdbmsRegionDataOutput(dataSource);
-
-            IOPipeline pipeline = new IOPipeline(dataInput, dataOutput);
-            pipeline.start();
+                IOPipeline pipeline = new IOPipeline(dataInput, dataOutput);
+                pipeline.start();
+            }
 
         } catch (ParseException e) {
             System.out.println(e.getMessage());
             printHelp();
             System.exit(-1);
         }
+    }
+
+    public static DataSource buildDataSource(CommandLine cmd) throws ParseException {
+        String mysqlHost = cmd.getOptionValue('h');
+        int mysqlPort = 3306;
+
+        if (cmd.hasOption('p')) {
+            try {
+                mysqlPort = Integer.valueOf(cmd.getOptionValue('p'));
+            } catch (NumberFormatException e) {
+                throw new ParseException(e.getMessage());
+            }
+        }
+        String mysqlDB = cmd.getOptionValue('d');
+        String mysqlUser = cmd.getOptionValue('u');
+        String mysqlPassword = cmd.getOptionValue('a');
+
+        MysqlDataSource dataSource = new MysqlDataSource();
+        dataSource.setServerName(mysqlHost);
+        dataSource.setPort(mysqlPort);
+        dataSource.setDatabaseName(mysqlDB);
+        dataSource.setUser(mysqlUser);
+        dataSource.setPassword(mysqlPassword);
+
+        try {
+            Connection connection = dataSource.getConnection();
+        } catch (SQLException e) {
+            throw new ParseException("DataSource get connection failed:" + e.getMessage());
+        }
+        return dataSource;
     }
 }

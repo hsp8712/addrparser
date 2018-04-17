@@ -22,18 +22,31 @@ public class RdbmsRegionDataInput implements RegionDataInput {
 
     private static final Logger LOG = LoggerFactory.getLogger(RdbmsRegionDataInput.class);
 
-    private static final String SELECT_SQL
-            = "SELECT code, parent_code, name, level, center, polyline FROM region_data";
-
     private DataSource ds = null;
     private Connection conn = null;
     private PreparedStatement stmt = null;
     private ResultSet rs = null;
     private RegionDataReport report = new RegionDataReport();
     private boolean initialized = false;
+    private final String sql;
+
+    public RdbmsRegionDataInput(DataSource ds, String tableName) {
+        if (ds == null) {
+            throw new IllegalArgumentException("DataSource:<ds> is null.");
+        }
+        if (tableName == null) {
+            throw new IllegalArgumentException("<tableName> is null.");
+        }
+        this.ds = ds;
+        this.sql = RdbmsSQL.selectSQL(tableName);
+    }
 
     public RdbmsRegionDataInput(DataSource ds) {
+        if (ds == null) {
+            throw new IllegalArgumentException("DataSource:<ds> is null.");
+        }
         this.ds = ds;
+        this.sql = RdbmsSQL.defaultSelectSQL();
     }
 
     @Override
@@ -48,25 +61,30 @@ public class RdbmsRegionDataInput implements RegionDataInput {
                 return;
             }
 
+            LOG.debug("Initializing...sql: {}", this.sql);
+
             try {
                 this.conn = this.ds.getConnection();
             } catch (SQLException e) {
                 throw new IOException(e.getMessage(), e);
             }
 
+            LOG.debug("Initializing: Get connection completely.");
+
             try {
-                this.stmt = this.conn.prepareStatement(SELECT_SQL);
+                this.stmt = this.conn.prepareStatement(this.sql);
                 this.rs = this.stmt.executeQuery();
             } catch (SQLException e) {
-                throw new IOException(e.getMessage(), e);
-            } finally {
                 try {
                     this.conn.close();
-                } catch (SQLException e) {
+                } catch (SQLException e1) {
                 }
+                throw new IOException(e.getMessage(), e);
             }
 
+            LOG.debug("Initializing: Get preparedStatement/resultSet completely.");
             this.initialized = true;
+            LOG.debug("Initialized.");
         }
 
     }
