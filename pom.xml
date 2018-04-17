@@ -20,7 +20,7 @@
 	</developers>
 	<scm>
 		<connection>scm:git:git@github.com:hsp8712/addrparser.git</connection>
-		<developerConnection>scm:git:ssh://github.com:hsp8712/addrparser.git</developerConnection>
+		<developerConnection>scm:git:git@github.com:hsp8712/addrparser.git</developerConnection>
 		<url>https://github.com/hsp8712/addrparser/tree/master</url>
 	</scm>
 	<distributionManagement>
