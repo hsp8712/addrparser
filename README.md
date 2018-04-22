@@ -1,3 +1,4 @@
+[![Build Status](https://api.travis-ci.org/hsp8712/addrparser.svg?branch=master)](https://travis-ci.org/hsp8712/addrparser)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/tech.spiro/addrparser/badge.svg)](https://maven-badges.herokuapp.com/maven-central/tech.spiro/addrparser/)
 [![GitHub release](https://img.shields.io/github/release/hsp8712/addrparser.svg)](https://github.com/hsp8712/addrparser/releases)
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
@@ -6,6 +7,7 @@
 离线高效的解析中国范围内的经纬度为省市区信息，省市区信息包括: 行政区划编码、行政区划中文名称、行政区域的中心点经纬度，行政区域的边界点经纬度集合。
 
 # 依赖安装
+***依赖 jdk1.8***
 ## Maven
 ```xml
 <dependency>
