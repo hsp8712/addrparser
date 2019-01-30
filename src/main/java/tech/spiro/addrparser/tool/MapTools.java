@@ -35,25 +35,37 @@ public class MapTools
 		double s = 2 * Math.asin( Math.sqrt( Math.pow( Math.sin( a / 2 ), 2 ) + Math.cos( radLat1 ) * Math.cos( radLat2 )
 				* Math.pow( Math.sin( b / 2 ), 2 ) ) );
 		s = s * EARTH_RADIUS;
-		s = (double) Math.round( s * 10000 ) / 10000;
 		return s;
 	}
 
+    /**
+     * Calculate point to line distance (meter)
+     * @param p                 point
+     * @param lineStartPoint    line start point
+     * @param lineEndPoint      line end point
+     * @return  distance of point to line.
+     */
+    public static double getPoint2LineDistance(Point p, Point lineStartPoint, Point lineEndPoint)
+    {
+        double a = getPoint2PointDistance(lineStartPoint, lineEndPoint);
+        double b = getPoint2PointDistance(p, lineStartPoint);
+        double c = getPoint2PointDistance(p, lineEndPoint);
 
+        double cosα = (Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2)) / (2 * a * b);
+        double cosβ = (Math.pow(a, 2) + Math.pow(c, 2) - Math.pow(b, 2)) / (2 * a * c);
 
-	/**
-	 * Calculate point to line distance (meter)
-	 * @param p                 point
-	 * @param lineStartPoint    line start point
-	 * @param lineEndPoint      line end point
-	 * @return  distance of point to line.
-	 */
-	public static double getPoint2LineDistance(Point p, Point lineStartPoint, Point lineEndPoint)
-	{
-		double du = Line2D.ptSegDist( lineStartPoint.getLon(), lineStartPoint.getLat(), lineEndPoint.getLon(), lineEndPoint.getLat(), p.getLon(), p.getLat() );
-		Point p2 = new Point( p.getLon(), p.getLat() + du );
-		return getPoint2PointDistance( p, p2 );
-	}
+        double distance;
+
+        if (cosα <= 0) {
+            distance = b;
+        } else if (cosβ <= 0) {
+            distance = c;
+        } else {
+            distance = (Math.sqrt((a + b + c) * (a + b - c) * (a + c - b) * (b + c - a))) / (2 * a);
+        }
+
+        return distance;
+    }
 
 	/**
 	 * To determine whether a point in a circle
