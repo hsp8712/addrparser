@@ -21,7 +21,7 @@
 
 # 使用说明
 ## 下载数据文件
-[china-region-20180418.zip](https://github.com/hsp8712/addrparser/releases/download/addrparser-1.0.1/china-region-20180418.zip)
+[china-region-20180418.zip](https://github.com/hsp8712/addrparser/releases/download/addrparser-1.0/china-region-20180418.zip)
 解压后得到文件：china-region.json，文件中包括了所有的省市区行政区域信息，包括编码、名称、中心点、边界点集合。
 
 **经纬度数据基于GCJ-02坐标系**
