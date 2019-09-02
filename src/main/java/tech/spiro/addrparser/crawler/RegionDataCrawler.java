@@ -25,27 +25,27 @@ public class RegionDataCrawler {
 
     private static final Logger LOG = LoggerFactory.getLogger(RegionDataCrawler.class);
 
+    // country root code
     public static final int COUNTRY_CODE = 100000;
-//    public static final String AMAP_KEY = "444f3432eda1209dfe4cb8edfd0211f9";
-    public static final String AMAP_KEY = "b504cbfb3664f21235dd413fc73b44c5";
 
     private AtomicInteger invokerCount = new AtomicInteger(0);
 
-    private RegionDataOutput regionOutput;
+    private final RegionDataOutput regionOutput;
 
-    public RegionDataCrawler() {
-    }
+    /** AMAP api key */
+    private final String amapKey;
 
-    public RegionDataCrawler(RegionDataOutput regionOutput) throws IOException {
+    public RegionDataCrawler(RegionDataOutput regionOutput, String amapKey) throws IOException {
         this.regionOutput = regionOutput;
         this.regionOutput.init();
+        this.amapKey = amapKey;
     }
 
     private List<RegionDTO> getSubRegionDTOs(int code) throws GetRegionException {
 
         RestClient restClient = new RestClient();
         restClient.setKeywords(Integer.toString(code));
-        restClient.setKey(AMAP_KEY);
+        restClient.setKey(this.amapKey);
         restClient.setExtensions("base");
         restClient.setSubdistrict("1");
 
@@ -92,7 +92,7 @@ public class RegionDataCrawler {
         for (RegionDTO subRegionDTO : subRegionDTOs) {
             RestClient subRestClient = new RestClient();
             subRestClient.setExtensions("all");
-            subRestClient.setKey(AMAP_KEY);
+            subRestClient.setKey(this.amapKey);
             subRestClient.setKeywords(Integer.toString(subRegionDTO.getCode()));
             subRestClient.setSubdistrict("0");
 

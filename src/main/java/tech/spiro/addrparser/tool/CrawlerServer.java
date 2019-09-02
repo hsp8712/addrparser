@@ -18,6 +18,7 @@ public class CrawlerServer {
 
     private static Options options = new Options();
     static {
+        options.addRequiredOption("k", "key", true, "Amap enterprise dev key");
         options.addRequiredOption("l", "level", true, "Root region level: 0-country, 1-province, 2-city");
         options.addRequiredOption("c", "code", true, "Root region code");
         options.addRequiredOption("o", "out", true, "Output file.");
@@ -33,6 +34,7 @@ public class CrawlerServer {
         CommandLineParser parser = new DefaultParser();
         try {
             CommandLine cmd = parser.parse(options, args);
+            String key  = cmd.getOptionValue("k");
             String level = cmd.getOptionValue('l');
             String code = cmd.getOptionValue('c');
 
@@ -48,7 +50,7 @@ public class CrawlerServer {
                 throw new ParseException("code must be numeric.");
             }
 
-            execute(level, _code, out);
+            execute(key, level, _code, out);
 
         } catch (ParseException e) {
             System.out.println(e.getMessage());
@@ -57,9 +59,9 @@ public class CrawlerServer {
         }
     }
 
-    private static void execute(String level, int code, String out) throws IOException, GetRegionException {
+    private static void execute(String amapKey, String level, int code, String out) throws IOException, GetRegionException {
         try (RegionDataOutput regionOutput = new JSONFileRegionDataOutput(out)) {
-            RegionDataCrawler infoLoader = new RegionDataCrawler(regionOutput);
+            RegionDataCrawler infoLoader = new RegionDataCrawler(regionOutput, amapKey);
 
             if ("0".equals(level)) {
                 infoLoader.loadCountry();
