@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>tech.spiro</groupId>
     <artifactId>addrparser</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>Tool for parsing longitude/latitude to region info in china.</description>
 	<url>https://github.com/hsp8712/addrparser</url>

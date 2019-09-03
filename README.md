@@ -13,15 +13,15 @@
 <dependency>
     <groupId>tech.spiro</groupId>
     <artifactId>addrparser</artifactId>
-    <version>1.0.1</version>
+    <version>1.1</version>
 </dependency>
 ```
 ## Jar文件
-[addrparser-1.0.1](http://repo1.maven.org/maven2/tech/spiro/addrparser/1.0.1/addrparser-1.0.1.jar)
+[addrparser-1.1](http://repo1.maven.org/maven2/tech/spiro/addrparser/1.1/addrparser-1.1.jar)
 
-# 使用说明
+# 使用说明-解析地址
 ## 下载数据文件
-[china-region-20180418.zip](https://github.com/hsp8712/addrparser/releases/download/addrparser-1.0/china-region-20180418.zip)
+[china-region-20190902.zip](https://github.com/hsp8712/addrparser/releases/download/addrparser-1.0.1/china-region-20190902.zip)
 解压后得到文件：china-region.json，文件中包括了所有的省市区行政区域信息，包括编码、名称、中心点、边界点集合。
 
 **经纬度数据基于GCJ-02坐标系**
@@ -53,7 +53,10 @@ RegionInfo districtInfo = location.getDistrict();
 将数据导入mysql数据库，使用mysql中数据作为基础数据。
 
 下载数据导入工具：
-[addrparser-1.0.tar.gz](https://github.com/hsp8712/addrparser/releases/download/addrparser-1.0/addrparser-1.0.tar.gz)
+[addrparser-1.1.tar.gz](https://github.com/hsp8712/addrparser/releases/download/addrparser-1.1/addrparser-1.1.tar.gz)
+
+或通过源码编译工具： `mvn clean package -P tool`
+
 
 解压后，进入addrparser/bin目录，执行jsonfile2mysql.sh (Linux) 或 jsonfile2mysql.bat (Windows)
 
@@ -95,4 +98,25 @@ RegionInfo provInfo = location.getProv();
 RegionInfo cityInfo = location.getCity();
 RegionInfo districtInfo = location.getDistrict();
 ```
+
+# 使用说明-地图工具
+`tech.spiro.addrparser.tool.MapTools` 类中包含了常用的地图工具方法：
+
+## getPoint2PointDistance
+获取点到点的距离
+
+## getPoint2LineDistance
+获取点到直线的距离
+
+## inCircleArea
+判断点是否在圆形范围内
+
+## inRectangleArea
+判断点是否在矩形范围内
+
+## inPolygonArea
+判断点是否在多边形范围内
+
+## yawing
+判断点是否偏离一个轨迹
 
