@@ -1,6 +1,6 @@
 package tech.spiro.addrparser.tool;
 
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+import com.mysql.cj.jdbc.MysqlDataSource;
 import org.apache.commons.cli.*;
 import tech.spiro.addrparser.crawler.GetRegionException;
 import tech.spiro.addrparser.io.IOPipeline;
