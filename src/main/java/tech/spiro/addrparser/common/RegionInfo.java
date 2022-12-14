@@ -16,7 +16,6 @@ public class RegionInfo {
     private final String name;
     private final RegionLevel level;
     private final Point center;
-    private final List<List<Point>> polyline;
 
     private final ContainPointJudge containPointJudge = ContainPointJudgeFactory.create();
 
@@ -26,8 +25,7 @@ public class RegionInfo {
         this.name = builder.name;
         this.level = builder.level;
         this.center = builder.center;
-        this.polyline = Collections.unmodifiableList(builder.polyline);
-        containPointJudge.initPolygons(this.polyline);
+        containPointJudge.initPolygons(Collections.unmodifiableList(builder.polyline));
     }
 
     public int getParentCode() {
@@ -50,9 +48,6 @@ public class RegionInfo {
         return center;
     }
 
-    public List<List<Point>> getPolyline() {
-        return polyline;
-    }
 
     public boolean contain(Point point) {
         return this.containPointJudge.contain(point);
